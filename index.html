@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>凡哥日程日历 - 2026年8月</title>
+<style>
+  :root {
+    --bg: #F6F8FB;
+    --card: #FFFFFF;
+    --text-primary: #152033;
+    --text-secondary: #637089;
+    --text-muted: #9CA3AF;
+    --brand: #2F6BFF;
+    --brand-light: #EEF2FF;
+    --success: #16A37B;
+    --success-light: #ECFDF5;
+    --warning: #F59E0B;
+    --warning-light: #FFFBEB;
+    --danger: #EF4444;
+    --danger-light: #FEF2F2;
+    --divider: #E6EAF2;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  .app {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  /* Month Nav */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--divider);
+  }
+  .month-nav button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--divider);
+    background: var(--card);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .month-nav button:hover, .month-nav button:focus-visible {
+    background: var(--brand-light);
+    border-color: var(--brand);
+    color: var(--brand);
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+  .month-label {
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 140px;
+    text-align: center;
+  }
+  .today-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--brand);
+    background: var(--brand-light);
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .today-btn:hover {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  /* Calendar Grid */
+  .calendar {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--divider);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #F8FAFC;
+    border-bottom: 1px solid var(--divider);
+  }
+  .weekday {
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+  }
+  .weekday.weekend { color: var(--danger); opacity: 0.7; }
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .day-cell {
+    min-height: 90px;
+    border-right: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    padding: 4px;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+  .day-cell:nth-child(7n) { border-right: none; }
+  .day-cell:hover { background: #F8FAFC; }
+  .day-cell.other-month { background: #FAFBFC; }
+  .day-cell.other-month .day-num { color: #D1D5DB; }
+  .day-cell.today { background: var(--brand-light); }
+  .day-cell.today .day-num {
+    background: var(--brand);
+    color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .day-cell.selected { background: #EEF2FF; box-shadow: inset 0 0 0 2px var(--brand); border-radius: 4px; }
+  .day-num {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    min-height: 26px;
+  }
+  .day-num.weekend-num { color: var(--danger); }
+  .day-cell.today .day-num.weekend-num { color: #fff; }
+  .day-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .day-task-bar {
+    font-size: 10px;
+    line-height: 1.3;
+    padding: 1px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .day-task-bar:hover { opacity: 0.85; }
+  .day-task-more {
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 0 4px;
+    font-weight: 500;
+  }
+
+  /* Project colors */
+  .c-tianfu1 { background: #22C55E; }
+  .c-mingyue { background: #3B82F6; }
+  .c-qingyang { background: #8B5CF6; }
+  .c-tianfu9 { background: #F59E0B; }
+  .c-jianfa { background: #06B6D4; }
+  .c-shiqu { background: #EF4444; }
+  .c-yuejinsha { background: #EC4899; }
+  .c-cuiyu { background: #F97316; }
+  .c-longhu { background: #84CC16; }
+
+  /* Detail Panel */
+  .detail-panel {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--divider);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .detail-panel.hidden { display: none; }
+  .detail-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .detail-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .detail-header .detail-date-info {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-left: 8px;
+    font-weight: 400;
+  }
+  .detail-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: #F3F4F6;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .detail-close:hover, .detail-close:focus-visible { background: #E5E7EB; outline: 2px solid var(--brand); outline-offset: 2px; }
+  .detail-body { padding: 16px 20px; }
+  .detail-empty {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  .detail-task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F3F4F6;
+    font-size: 14px;
+  }
+  .detail-task-item:last-child { border-bottom: none; }
+  .detail-task-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .detail-task-project {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+  }
+  .detail-task-text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Legend */
+  .legend {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--divider);
+  }
+  .legend-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .legend-item:hover {
+    background: #F0F2F5;
+  }
+  .legend-item.active {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    font-weight: 600;
+  }
+  .legend-item.dimmed {
+    opacity: 0.35;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    width: 100%;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--divider);
+  }
+  .legend-group-label:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .day-cell { min-height: 70px; padding: 2px; }
+    .day-num { font-size: 12px; min-width: 22px; min-height: 22px; }
+    .day-task-bar { font-size: 9px; padding: 1px 3px; }
+    .weekday { font-size: 11px; padding: 8px 2px; }
+    .month-label { font-size: 16px; min-width: 120px; }
+    .detail-body { padding: 12px 16px; }
+  }
+  @media (max-width: 480px) {
+    .app { padding: 12px 8px 40px; }
+    .day-cell { min-height: 56px; }
+    .day-task-bar { font-size: 8px; }
+    .legend-items { gap: 6px 10px; }
+  }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .month-nav button, .today-btn, .detail-close { display: none; }
+    .day-cell { min-height: 60px; }
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="header">
+    <h1>凡哥日程日历</h1>
+    <a href="https://www.coze.cn/s/cY6cVPh9FNc/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+      <button class="today-btn" style="display:flex;align-items:center;gap:5px;">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        项目看板
+      </button>
+    </a>
+  </header>
+
+  <nav class="month-nav">
+    <button id="prevMonth" aria-label="上一月">‹</button>
+    <span class="month-label" id="monthLabel"></span>
+    <button id="nextMonth" aria-label="下一月">›</button>
+    <button class="today-btn" id="todayBtn">今天</button>
+  </nav>
+
+  <section class="calendar" aria-label="月历">
+    <div class="weekdays">
+      <div class="weekday">一</div>
+      <div class="weekday">二</div>
+      <div class="weekday">三</div>
+      <div class="weekday">四</div>
+      <div class="weekday">五</div>
+      <div class="weekday weekend">六</div>
+      <div class="weekday weekend">日</div>
+    </div>
+    <div class="days" id="calendarDays"></div>
+  </section>
+
+  <section class="detail-panel hidden" id="detailPanel" aria-label="当日详情">
+    <div class="detail-header">
+      <h2 id="detailTitle"></h2>
+      <button class="detail-close" onclick="closeDetail()" aria-label="关闭">✕</button>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+  </section>
+
+  <aside class="legend">
+    <div class="legend-title">项目图例 <span style="font-weight:400;color:var(--text-muted);">（点击筛选）</span></div>
+    <div class="legend-items" id="legendItems">
+      <div class="legend-group-label">已签约 · 施工中</div>
+      <div class="legend-item" data-color="c-tianfu1" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#22C55E"></span>天府壹号</div>
+      <div class="legend-item" data-color="c-mingyue" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#3B82F6"></span>洺悦玺</div>
+      <div class="legend-item" data-color="c-qingyang" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#8B5CF6"></span>青羊润府</div>
+      <div class="legend-group-label">已签约 · 设计中</div>
+      <div class="legend-item" data-color="c-tianfu9" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#F59E0B"></span>天府九里</div>
+      <div class="legend-item" data-color="c-jianfa" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#06B6D4"></span>建发云</div>
+      <div class="legend-item" data-color="c-shiqu" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#EF4444"></span>天府时区</div>
+      <div class="legend-item" data-color="c-yuejinsha" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#EC4899"></span>越秀阅今沙</div>
+      <div class="legend-group-label">未签合同</div>
+      <div class="legend-item" data-color="c-cuiyu" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#F97316"></span>公园翠屿</div>
+      <div class="legend-item" data-color="c-longhu" onclick="toggleFilter(this)"><span class="legend-dot" style="background:#84CC16"></span>龙湖粼湖天境</div>
+    </div>
+  </aside>
+</main>
+
+<script>
+  // 日程数据：key 为 YYYY-MM-DD
+  const scheduleData = {
+    '2026-08-25': [
+      { project: '电建·洺悦玺', task: '确认定制方案、色板和报价', color: 'c-mingyue' },
+      { project: '天府九里', task: '跟定制设计师沟通客户要求', color: 'c-tianfu9' },
+      { project: '天府九里', task: '给客户打电话沟通定制方案', color: 'c-tianfu9' },
+      { project: '建发云', task: '找效果图公司要模型', color: 'c-jianfa' },
+      { project: '天府时区', task: '跟客户约周日的时间', color: 'c-shiqu' }
+    ],
+    '2026-08-26': [
+      { project: '青羊润府', task: '选软装挂画', color: 'c-qingyang' },
+      { project: '越秀阅今沙', task: '出书房平面方案', color: 'c-yuejinsha' }
+    ],
+    '2026-08-27': [
+      { project: '明信·天府壹号', task: '确认楼梯地板安装', color: 'c-tianfu1' },
+      { project: '明信·天府壹号', task: '确认石材安装', color: 'c-tianfu1' },
+      { project: '电建·洺悦玺', task: '客户到店确认方案', color: 'c-mingyue' },
+      { project: '建发云', task: '效果图改完发给客户', color: 'c-jianfa' }
+    ],
+    '2026-08-28': [
+      { project: '明信·天府壹号', task: '与艺术漆沟通，安排进场', color: 'c-tianfu1' },
+      { project: '天府时区', task: '完成平面方案和设计资料', color: 'c-shiqu' }
+    ],
+    '2026-08-29': [
+      { project: '龙湖粼湖天境', task: '下午客户来公司沟通', color: 'c-longhu' }
+    ],
+    '2026-08-30': [
+      { project: '天府时区', task: '与客户见面沟通', color: 'c-shiqu' }
+    ],
+    '2026-08-31': [
+      { project: '越秀阅今沙', task: '等客户确认折叠门方案后跟进', color: 'c-yuejinsha' }
+    ],
+    '2026-09-01': [
+      { project: '明信·天府壹号', task: '跟定制确认安装时间', color: 'c-tianfu1' }
+    ],
+    '2026-09-15': [
+      { project: '公园翠屿', task: '客户父母从新疆到成都，安排到店', color: 'c-cuiyu' }
+    ]
+  };
+
+  const today = new Date(2026, 7, 25); // 2026-08-25
+  let currentYear = today.getFullYear();
+  let currentMonth = today.getMonth();
+  let selectedDate = null;
+  let activeFilter = null; // null = show all, otherwise = color class string
+
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const weekDayNames = ['周日','周一','周二','周三','周四','周五','周六'];
+
+  function renderCalendar(year, month) {
+    const label = document.getElementById('monthLabel');
+    label.textContent = year + '年' + monthNames[month];
+
+    const container = document.getElementById('calendarDays');
+    container.innerHTML = '';
+
+    const firstDay = new Date(year, month, 1);
+    let startWeekday = firstDay.getDay(); // 0=Sun
+    if (startWeekday === 0) startWeekday = 7; // 转为 1=Mon ... 7=Sun
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    // Total cells needed (always 6 rows = 42 cells for consistent layout)
+    const totalCells = 42;
+
+    for (let i = 0; i < totalCells; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+
+      let dayNum, dateKey, isOtherMonth = false;
+
+      if (i < startWeekday - 1) {
+        // Previous month
+        dayNum = prevMonthDays - (startWeekday - 2 - i);
+        const prevM = month === 0 ? 11 : month - 1;
+        const prevY = month === 0 ? year - 1 : year;
+        dateKey = prevY + '-' + String(prevM + 1).padStart(2, '0') + '-' + String(dayNum).padStart(2, '0');
+        isOtherMonth = true;
+      } else if (i >= startWeekday - 1 + daysInMonth) {
+        // Next month
+        dayNum = i - (startWeekday - 1 + daysInMonth) + 1;
+        const nextM = month === 11 ? 0 : month + 1;
+        const nextY = month === 11 ? year + 1 : year;
+        dateKey = nextY + '-' + String(nextM + 1).padStart(2, '0') + '-' + String(dayNum).padStart(2, '0');
+        isOtherMonth = true;
+      } else {
+        dayNum = i - (startWeekday - 1) + 1;
+        dateKey = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(dayNum).padStart(2, '0');
+      }
+
+      if (isOtherMonth) cell.classList.add('other-month');
+
+      // Check if today
+      if (dateKey === formatDate(today)) {
+        cell.classList.add('today');
+      }
+
+      // Check if selected
+      if (selectedDate && dateKey === selectedDate) {
+        cell.classList.add('selected');
+      }
+
+      // Day number
+      const col = i % 7;
+      const isWeekend = col >= 5;
+      const numEl = document.createElement('div');
+      numEl.className = 'day-num' + (isWeekend ? ' weekend-num' : '');
+      numEl.textContent = dayNum;
+      cell.appendChild(numEl);
+
+      // Tasks (filtered by activeFilter if set)
+      let tasks = scheduleData[dateKey];
+      if (tasks && tasks.length > 0) {
+        if (activeFilter) {
+          tasks = tasks.filter(t => t.color === activeFilter);
+        }
+        if (tasks.length > 0) {
+          const tasksDiv = document.createElement('div');
+          tasksDiv.className = 'day-tasks';
+          const maxShow = 3;
+          tasks.slice(0, maxShow).forEach(t => {
+            const bar = document.createElement('div');
+            bar.className = 'day-task-bar ' + t.color;
+            bar.textContent = t.task.length > 8 ? t.task.substring(0, 7) + '…' : t.task;
+            bar.title = t.project + '：' + t.task;
+            tasksDiv.appendChild(bar);
+          });
+          if (tasks.length > maxShow) {
+            const more = document.createElement('div');
+            more.className = 'day-task-more';
+            more.textContent = '+' + (tasks.length - maxShow) + ' 更多';
+            tasksDiv.appendChild(more);
+          }
+          cell.appendChild(tasksDiv);
+        }
+      }
+
+      cell.setAttribute('data-date', dateKey);
+      cell.addEventListener('click', function() { selectDate(dateKey); });
+      container.appendChild(cell);
+    }
+  }
+
+  function formatDate(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function selectDate(dateKey) {
+    selectedDate = dateKey;
+    renderCalendar(currentYear, currentMonth);
+    showDetail(dateKey);
+  }
+
+  function showDetail(dateKey) {
+    const panel = document.getElementById('detailPanel');
+    const title = document.getElementById('detailTitle');
+    const body = document.getElementById('detailBody');
+
+    const parts = dateKey.split('-');
+    const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    const weekDay = weekDayNames[d.getDay()];
+    const isToday = dateKey === formatDate(today);
+
+    let dateStr = parts[0] + '年' + parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日 ' + weekDay;
+    if (isToday) dateStr += '（今天）';
+
+    title.innerHTML = dateStr;
+
+    const tasks = scheduleData[dateKey];
+    let filteredTasks = tasks;
+    if (tasks && activeFilter) {
+      filteredTasks = tasks.filter(t => t.color === activeFilter);
+    }
+    if (!filteredTasks || filteredTasks.length === 0) {
+      body.innerHTML = '<div class="detail-empty">当天无' + (activeFilter ? '该项目' : '') + '安排</div>';
+    } else {
+      let html = '';
+      filteredTasks.forEach(t => {
+        const dotClass = t.color;
+        const colorMap = {
+          'c-tianfu1': '#22C55E',
+          'c-mingyue': '#3B82F6',
+          'c-qingyang': '#8B5CF6',
+          'c-tianfu9': '#F59E0B',
+          'c-jianfa': '#06B6D4',
+          'c-shiqu': '#EF4444',
+          'c-yuejinsha': '#EC4899',
+          'c-cuiyu': '#F97316',
+          'c-longhu': '#84CC16'
+        };
+        html += '<div class="detail-task-item">' +
+          '<span class="detail-task-dot" style="background:' + (colorMap[dotClass] || '#999') + '"></span>' +
+          '<div>' +
+          '<div class="detail-task-project">' + t.project + '</div>' +
+          '<div class="detail-task-text">' + t.task + '</div>' +
+          '</div></div>';
+      });
+      body.innerHTML = html;
+    }
+
+    panel.classList.remove('hidden');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function closeDetail() {
+    document.getElementById('detailPanel').classList.add('hidden');
+    selectedDate = null;
+    renderCalendar(currentYear, currentMonth);
+  }
+
+  // Legend filter
+  function toggleFilter(el) {
+    const color = el.getAttribute('data-color');
+    if (activeFilter === color) {
+      // Deselect — show all
+      activeFilter = null;
+      document.querySelectorAll('.legend-item').forEach(item => {
+        item.classList.remove('active', 'dimmed');
+      });
+    } else {
+      // Select this project
+      activeFilter = color;
+      document.querySelectorAll('.legend-item').forEach(item => {
+        if (item.getAttribute('data-color') === color) {
+          item.classList.add('active');
+          item.classList.remove('dimmed');
+        } else {
+          item.classList.remove('active');
+          item.classList.add('dimmed');
+        }
+      });
+    }
+    renderCalendar(currentYear, currentMonth);
+    // Re-render detail if a date is selected
+    if (selectedDate) {
+      showDetail(selectedDate);
+    }
+  }
+
+  // Navigation
+  document.getElementById('prevMonth').addEventListener('click', function() {
+    currentMonth--;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    selectedDate = null;
+    document.getElementById('detailPanel').classList.add('hidden');
+    renderCalendar(currentYear, currentMonth);
+  });
+
+  document.getElementById('nextMonth').addEventListener('click', function() {
+    currentMonth++;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    selectedDate = null;
+    document.getElementById('detailPanel').classList.add('hidden');
+    renderCalendar(currentYear, currentMonth);
+  });
+
+  document.getElementById('todayBtn').addEventListener('click', function() {
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+    selectedDate = formatDate(today);
+    renderCalendar(currentYear, currentMonth);
+    showDetail(selectedDate);
+  });
+
+  // Initial render
+  renderCalendar(currentYear, currentMonth);
+
+  // Auto-select today
+  selectedDate = formatDate(today);
+  renderCalendar(currentYear, currentMonth);
+  showDetail(selectedDate);
+</script>
+</body>
+</html>
