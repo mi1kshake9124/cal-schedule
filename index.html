@@ -381,6 +381,19 @@
     .month-nav button, .today-btn, .detail-close { display: none; }
     .day-cell { min-height: 60px; }
   }
+
+.c-tianchen {background: #14B8A6;}
+.c-oubo {background: #A855F7;}
+.c-lugo {background: #64748B;}
+.c-wangge {background: #D946EF;}
+.c-gongsi {background: #0EA5E9;}
+.c-x1 {background: #14B8A6;}
+.c-x2 {background: #A855F7;}
+.c-x3 {background: #64748B;}
+.c-x4 {background: #D946EF;}
+.c-x5 {background: #0EA5E9;}
+.c-x6 {background: #EAB308;}
+.c-x7 {background: #6366F1;}
 </style>
 </head>
 <body>
@@ -445,42 +458,85 @@
 <script>
   // 日程数据：key 为 YYYY-MM-DD
   const scheduleData = {
-    '2026-08-25': [
-      { project: '电建·洺悦玺', task: '确认定制方案、色板和报价', color: 'c-mingyue' },
-      { project: '天府九里', task: '跟定制设计师沟通客户要求', color: 'c-tianfu9' },
-      { project: '天府九里', task: '给客户打电话沟通定制方案', color: 'c-tianfu9' },
-      { project: '建发云', task: '找效果图公司要模型', color: 'c-jianfa' },
-      { project: '天府时区', task: '跟客户约周日的时间', color: 'c-shiqu' }
-    ],
-    '2026-08-26': [
-      { project: '青羊润府', task: '选软装挂画', color: 'c-qingyang' },
-      { project: '越秀阅今沙', task: '出书房平面方案', color: 'c-yuejinsha' }
-    ],
     '2026-08-27': [
-      { project: '明信·天府壹号', task: '确认楼梯地板安装', color: 'c-tianfu1' },
-      { project: '明信·天府壹号', task: '确认石材安装', color: 'c-tianfu1' },
-      { project: '电建·洺悦玺', task: '客户到店确认方案', color: 'c-mingyue' },
-      { project: '建发云', task: '效果图改完发给客户', color: 'c-jianfa' }
+      { project: "建发缦云", task: "找效果图公司要模型", color: 'c-jianfa' },
+      { project: "天府时区", task: "跟客户约周日的时间", color: 'c-shiqu' },
     ],
     '2026-08-28': [
-      { project: '明信·天府壹号', task: '与艺术漆沟通，安排进场', color: 'c-tianfu1' },
-      { project: '天府时区', task: '完成平面方案和设计资料', color: 'c-shiqu' }
+      { project: "明信·天府壹号", task: "确认楼梯地板安装", color: 'c-tianfu1' },
+      { project: "明信·天府壹号", task: "确认石材安装", color: 'c-tianfu1' },
+      { project: "电建·洺悦玺", task: "确认定制方案、色板和报价", color: 'c-mingyue' },
+      { project: "天府九里", task: "跟定制设计师沟通客户要求", color: 'c-x1' },
+      { project: "天府九里", task: "给客户打电话沟通定制方案", color: 'c-x1' },
     ],
     '2026-08-29': [
-      { project: '龙湖粼湖天境', task: '下午客户来公司沟通', color: 'c-longhu' }
+      { project: "电建·洺悦玺", task: "客户到店看方案", color: 'c-mingyue' },
+      { project: "建发缦云", task: "效果图改完发给客户", color: 'c-jianfa' },
+      { project: "龙湖粼湖天境", task: "下午客户来公司沟通", color: 'c-longhu' },
     ],
     '2026-08-30': [
-      { project: '天府时区', task: '与客户见面沟通', color: 'c-shiqu' }
-    ],
-    '2026-08-31': [
-      { project: '越秀阅今沙', task: '等客户确认折叠门方案后跟进', color: 'c-yuejinsha' }
+      { project: "越秀阅今沙", task: "确认折叠门方案后跟进", color: 'c-yuejinsha' },
     ],
     '2026-09-01': [
-      { project: '明信·天府壹号', task: '跟定制确认安装时间', color: 'c-tianfu1' }
+      { project: "明信·天府壹号", task: "跟定制确认安装时间", color: 'c-tianfu1' },
+    ],
+    '2026-09-05': [
+      { project: "明信·天府壹号", task: "与项目经理沟通生活阳台窗户问题", color: 'c-tianfu1' },
+      { project: "电建·洺悦玺", task: "沟通门槛石铺贴问题", color: 'c-mingyue' },
+      { project: "电建·洺悦玺", task: "跟定制设计师沟通-石材选的图片放到效果图里重新出图", color: 'c-mingyue', important: true },
+      { project: "电建·洺悦玺", task: "去跟石材老板对接石材问题", color: 'c-mingyue', important: true },
+      { project: "建发缦云", task: "约客户线上沟通（待重新约）", color: 'c-jianfa' },
+      { project: "公园翠屿", task: "跟进客户父母到店时间", color: 'c-x4' },
+      { project: "天宸名邸", task: "上门量房", color: 'c-tianchen' },
+      { project: "欧博U家", task: "选软装", color: 'c-oubo' },
+    ],
+    '2026-09-06': [
+      { project: "电建·洺悦玺", task: "确认报批文件", color: 'c-mingyue' },
+      { project: "电建·洺悦玺", task: "对接电负荷（用电负荷容量）", color: 'c-mingyue', important: true },
+      { project: "天府九里", task: "确认定制设计师完成工作", color: 'c-x1' },
+      { project: "天府时区", task: "完成平面方案和设计资料", color: 'c-shiqu' },
+      { project: "天府时区", task: "客户到店沟通平面方案", color: 'c-shiqu' },
+      { project: "龙湖粼湖天境", task: "做详细报价", color: 'c-longhu' },
+      { project: "天府壹号院·鲁哥", task: "确认拆改方案", color: 'c-x5' },
+    ],
+    '2026-09-07': [
+      { project: "明信·天府壹号", task: "确认艺术漆进场时间", color: 'c-tianfu1' },
+      { project: "电建·洺悦玺", task: "确认定制报价、石材调整对接", color: 'c-mingyue' },
+      { project: "公司事务-精装部工作", task: "发布招人内容", color: 'c-x7' },
+    ],
+    '2026-09-08': [
+      { project: "青羊润府", task: "选画、单人沙发", color: 'c-qingyang' },
+      { project: "建发缦云", task: "王雅琼调整效果图", color: 'c-jianfa' },
+      { project: "天府壹号院·鲁哥", task: "开始设计对接", color: 'c-x5' },
+      { project: "天府壹号院·王哥", task: "更改方案、报价", color: 'c-x6' },
+      { project: "公司事务-精装部工作", task: "设计师工作手册", color: 'c-x7' },
+    ],
+    '2026-09-09': [
+      { project: "电建·洺悦玺", task: "约花园到现场", color: 'c-mingyue' },
+    ],
+    '2026-09-10': [
+      { project: "天府九里", task: "出报价", color: 'c-x1' },
+      { project: "越秀阅今沙", task: "做设计资料", color: 'c-yuejinsha' },
+    ],
+    '2026-09-11': [
+      { project: "天宸名邸", task: "出方案", color: 'c-tianchen' },
+    ],
+    '2026-09-12': [
+      { project: "公园翠屿", task: "客户到店", color: 'c-x4' },
+      { project: "公司事务-精装部工作", task: "设计师PPT内容", color: 'c-x7' },
     ],
     '2026-09-15': [
-      { project: '公园翠屿', task: '客户父母从新疆到成都，安排到店', color: 'c-cuiyu' }
-    ]
+      { project: "明信·天府壹号", task: "玻璃下单", color: 'c-tianfu1' },
+      { project: "建发缦云", task: "赵文卓做设计资料", color: 'c-jianfa' },
+      { project: "公司事务-精装部工作", task: "展厅标准内容", color: 'c-x7' },
+    ],
+    '2026-09-19': [
+      { project: "天府九里", task: "约客户到店选材", color: 'c-x1' },
+      { project: "公司事务-精装部工作", task: "成交全流程", color: 'c-x7' },
+    ],
+    '2026-09-22': [
+      { project: "龙湖粼湖天境", task: "带客户看工地", color: 'c-longhu' },
+    ],
   };
 
   const today = new Date(2026, 7, 25); // 2026-08-25
