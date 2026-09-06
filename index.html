@@ -395,6 +395,14 @@
 .c-x5 {background: #0EA5E9;}
 .c-x6 {background: #EAB308;}
 .c-x7 {background: #6366F1;}
+
+  /* 修复：手机端最后一列被挤出屏幕（grid 子项 nowrap 内容撑宽） */
+  html, body { overflow-x: hidden; }
+  .calendar-grid, .weekday-row { width: 100%; box-sizing: border-box; }
+  .day-cell, .weekday { min-width: 0; }
+  .day-cell { overflow: hidden; }
+  .day-task-bar { max-width: 100%; box-sizing: border-box; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .app { max-width: 100%; box-sizing: border-box; overflow-x: hidden; }
 </style>
 </head>
 <body>
