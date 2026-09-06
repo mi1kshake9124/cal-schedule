@@ -458,7 +458,7 @@
 
 <script>
   // 日程数据：key 为 YYYY-MM-DD
-  const scheduleData = {
+  let scheduleData = {
     '2026-08-27': [
       { project: "建发缦云", task: "找效果图公司要模型", color: 'c-jianfa' },
       { project: "天府时区", task: "跟客户约周日的时间", color: 'c-shiqu' },
@@ -692,7 +692,7 @@
           'c-longhu': '#84CC16'
         };
         html += '<div class="detail-task-item">' +
-          '<span class="detail-task-dot" style="background:' + (colorMap[dotClass] || '#999') + '"></span>' +
+          '<span class="detail-task-dot" style="background:' + (colorMap[dotClass] || (function(){var el=document.createElement('div');el.className=dotClass;el.style.display='none';document.body.appendChild(el);var c=getComputedStyle(el).backgroundColor;document.body.removeChild(el);return c||'#999';})()) + '"></span>' +
           '<div>' +
           '<div class="detail-task-project">' + t.project + '</div>' +
           '<div class="detail-task-text">' + t.task + '</div>' +
@@ -765,6 +765,46 @@
     showDetail(selectedDate);
   });
 
+  // 远程数据刷新：页面打开时自动拉取最新日程（内嵌数据仅作离线兜底）
+  async function refreshFromRemote() {
+    try {
+      const KEY2COLOR = {
+        'tianfu':'c-tianfu1','mingyue':'c-mingyue','qingyang':'c-qingyang','tianfu9':'c-tianfu9',
+        'jianfa':'c-jianfa','shiqu':'c-shiqu','yuejinsha':'c-yuejinsha','cuiyu':'c-cuiyu',
+        'longhu':'c-longhu','tianchen':'c-tianchen','oubo':'c-oubo','lugo':'c-lugo',
+        'wangge':'c-wangge','gongsi':'c-gongsi'
+      };
+      const resp = await fetch('https://raw.githubusercontent.com/mi1kshake9124/work-schedule/main/data.json?t=' + Date.now(), {cache: 'no-store'});
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const byDate = {};
+      const fallback = ['#14B8A6','#A855F7','#64748B','#D946EF','#0EA5E9','#EAB308','#6366F1'];
+      let fi = 0;
+      Object.keys(data.projects || {}).forEach(function(key) {
+        const p = data.projects[key];
+        const pname = (p.name || key).replace(/\s+\d[\d\-]*$/, '');
+        let color = KEY2COLOR[key];
+        if (!color) {
+          color = 'c-fb' + fi;
+          if (!document.querySelector('style.'+color)) {
+            var st = document.createElement('style');
+            st.textContent = '.' + color + '{background:' + fallback[fi % fallback.length] + '}';
+            document.head.appendChild(st);
+          }
+          fi++;
+        }
+        (p.tasks || []).forEach(function(t) {
+          if (!t.date) return;
+          if (!byDate[t.date]) byDate[t.date] = [];
+          byDate[t.date].push({ project: pname, task: t.text || '', color: color });
+        });
+      });
+      scheduleData = byDate;
+      renderCalendar(currentYear, currentMonth);
+      if (selectedDate) showDetail(selectedDate);
+    } catch(e) { /* 离线时使用内嵌数据 */ }
+  }
+
   // Initial render
   renderCalendar(currentYear, currentMonth);
 
@@ -772,6 +812,9 @@
   selectedDate = formatDate(today);
   renderCalendar(currentYear, currentMonth);
   showDetail(selectedDate);
+
+  // 自动拉取最新数据
+  refreshFromRemote();
 </script>
 </body>
 </html>
